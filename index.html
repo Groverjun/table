@@ -1,0 +1,111 @@
+<!DOCTYPE >
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title></title>
+		<link rel="stylesheet" href="layui/css/layui.css"  media="all">
+		<style type="text/css">
+				.month,.monthHead,.monthBody{display: none;}
+				tbody th{
+  		word-break: keep-all;white-space:nowrap;
+  	}
+		</style>
+	</head>
+	<body>
+		<div>
+			<input type="text"  placeholder="请输入显示的月份个数"/>
+			<button id="abt">提交</button>
+		</div>
+			<table class="layui-table" >
+			</table>
+			<script src="layui/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+			<script type="text/javascript">
+				//首先循环月份内容；
+				function monthFun(obj,mon,year){
+					var index=6;
+					var monthHead='';
+					var monthHead='';
+					var monthIndex='';
+					for(var j=1;j<=mon;j++){
+						if(j>1){
+							index=4;
+							monthHead+=`
+										<th>本月收入</th>
+						        <th>本月支出</th>
+						        <th>本月增减</th>
+						        <th>账户余额</th>
+							`
+						}
+						monthIndex+=`<th colspan="${index}">${year}年${j}月</th>`
+					};
+					obj.after(monthIndex);
+					obj.remove();
+					$(".monthHead").after(monthHead);
+					$(".monthHead").remove();
+				}
+				//循环y轴
+				function tbodyY(obj,mon,html){
+					var thteadHtml=html;
+					var tr=''
+					for(var i=1;i<=6;i++){
+						if(mon==1){
+							thteadHtml=''
+						}
+						tr+=`
+							<tr>
+						       <th>${i}</th>
+						       <th></th>
+						       <th></th>
+						       <th></th>
+						       <th></th>
+						       <th class="下一个"></th>
+						       ${thteadHtml}
+						  </tr>
+						`
+					};
+					obj.after(tr);
+					obj.remove();
+				}
+			
+				//循环第一个月以后的内容
+				function tbodyT(mon,fun){
+					var thteadHtml=''
+					for(var i=1;i<=mon-1;i++){
+						thteadHtml+=`
+							<th></th>
+					    <th></th>
+					    <th></th>
+					    <th></th>
+						`
+					}
+					fun(thteadHtml)
+				};
+				$("#abt").click(function(){
+					var month=$("input").val()
+					$("table").html(`
+							<tbody>
+								<tr>
+							      <th rowspan="8">合肥分公司</th>
+							      <th class="month"></th>
+							    </tr>
+							     <tr class="conterBox">
+							       <th>账户名称</th>
+							       <th>上期余额</th>
+							       <th>本月收入</th>
+							       <th>本月支出</th>
+							       <th>本月增减</th>
+							       <th>账户余额</th>
+							       <th class="monthHead"></th>
+							    </tr>
+							     <tr class="monthBody"></tr>
+							</tbody>	
+					`)
+					
+					monthFun($(".month"),month,2018);
+					tbodyT(month,function(html){
+							tbodyY($(".monthBody"),month,html)
+					})
+				})
+			</script>
+	</body>
+</html>
